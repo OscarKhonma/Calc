@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.InputMismatchException;
 
 public class Main {
 
@@ -42,7 +41,7 @@ public class Main {
             if (isParsable(numTrim1) && isParsable(numTrim2)) {
                 firstNumber = Integer.parseInt(numTrim1);
                 secondNumber = Integer.parseInt(numTrim2);
-                if (firstNumber <= 10 && firstNumber > 0 && secondNumber <= 10 && secondNumber > 0) {
+                if (firstNumber <= 10 && firstNumber > 0 && secondNumber <= 10 && secondNumber >= 0) {
                     result = calc(firstNumber, secondNumber, operation);
                     System.out.println(result);
                 }else {
@@ -54,7 +53,7 @@ public class Main {
             } else {
                 firstNumber = romanToNumber(numTrim1);
                 secondNumber = romanToNumber(numTrim2);
-                if (firstNumber < 0 && secondNumber < 0) {
+                if (firstNumber < 0 || secondNumber < 0) {
                     throw new RuntimeException("Допустимы всего два значения от I до X! Первые и третьи элементы " +
                             "только могут быть операндами, второй элемент должен быть оператором!");
                 } else if (firstNumber<secondNumber && operation=='-') {
@@ -79,33 +78,19 @@ public class Main {
 
 
     private static int romanToNumber (String roman) {
-        try {
-            switch (roman){
-                case "I":
-                    return 1;
-                case "II":
-                    return 2;
-                case "III":
-                    return 3;
-                case "IV":
-                    return 4;
-                case "V":
-                    return 5;
-                case "VI":
-                    return 6;
-                case "VII":
-                    return 7;
-                case "VIII":
-                    return 8;
-                case "IX":
-                    return 9;
-                case "X":
-                    return 10;
-            }
-        } catch (InputMismatchException e) {
-            throw new InputMismatchException("Неверный формат данных");
-        }
-        return -1;
+        return switch (roman) {
+            case "I" -> 1;
+            case "II" -> 2;
+            case "III" -> 3;
+            case "IV" -> 4;
+            case "V" -> 5;
+            case "VI" -> 6;
+            case "VII" -> 7;
+            case "VIII" -> 8;
+            case "IX" -> 9;
+            case "X" -> 10;
+            default -> -1;
+        };
     }
 
     private static String convertNumToRoman (int numArabian) {
@@ -119,34 +104,21 @@ public class Main {
                 "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII", "LXXXVIII", "LXXXIX", "XC",
                 "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"
         };
-        final String s = roman[numArabian];
-        return s;
+        return roman[numArabian];
     }
 
     public static int calc (int num1, int num2, char op) {
-        int result = 0;
-        switch (op) {
-            case '+':
-                result = num1 + num2;
-                break;
-            case '-':
-                result = num1 - num2;
-                break;
-            case '*':
-                result = num1 * num2;
-                break;
-            case '/':
-                try {
-                    result = (int)(num1 / num2);
-                } catch (ArithmeticException | InputMismatchException e) {
-                    System.out.println("Exception : " + e);
-                    System.out.println("Нулевые параметры запрещены для деления");
-                    break;
+        return switch (op) {
+            case '+' -> num1 + num2;
+            case '-' -> num1 - num2;
+            case '*' -> num1 * num2;
+            case '/' -> {
+                if (num2 == 0) {
+                    throw new RuntimeException("Нулевые параметры запрещены для деления");
                 }
-                break;
-            default:
-                throw new IllegalArgumentException("Не верный знак операции");
-        }
-        return result;
+                yield num1 / num2;
+            }
+            default -> throw new IllegalArgumentException("Не верный знак операции");
+        };
     }
 }
