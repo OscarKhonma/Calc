@@ -38,7 +38,7 @@ public class Main {
         } else {
             String numTrim1 = numbersArray[0].trim();
             String numTrim2 = numbersArray[1].trim();
-            if (isParsable(numTrim1) && isParsable(numTrim2)) {
+            if (isParsable(numTrim1) || isParsable(numTrim2)) {
                 firstNumber = Integer.parseInt(numTrim1);
                 secondNumber = Integer.parseInt(numTrim2);
                 if (firstNumber <= 10 && firstNumber > 0 && secondNumber <= 10 && secondNumber >= 0) {
