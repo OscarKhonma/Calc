@@ -30,7 +30,13 @@ public class Main {
             }
         }
         String[] numbersArray = input.split("[+-/*]");
-        if (numbersArray.length == 2){
+        if (numbersArray.length == 1){
+            throw new RuntimeException("Cтрока не является математической операцией");
+
+        } else if (numbersArray.length != 2) {
+            throw new RuntimeException("Формат математической операции не удовлетворяет заданию - два операнда и один " +
+                    "оператор (+, -, /, *)");
+        } else {
             String numTrim1 = numbersArray[0].trim();
             String numTrim2 = numbersArray[1].trim();
             if (isParsable(numTrim1) && isParsable(numTrim2)) {
@@ -40,34 +46,26 @@ public class Main {
                     result = calc(firstNumber, secondNumber, operation);
                     System.out.println(result);
                 }else {
-                    System.err.println("Калькулятор должен принимать на вход числа от 1 до 10 включительно" +
-                            " или от I до X");
+                    throw new RuntimeException("Калькулятор должен принимать на вход числа от 1 до 10 " +
+                            "включительно или от I до X");
                 }
             } else if (isParsable(numTrim1) && !(isParsable(numTrim2)) || !(isParsable(numTrim1)) && isParsable(numTrim2)) {
-                System.err.println("Используются одновременно разные системы счисления");
+                throw new RuntimeException("Используются одновременно разные системы счисления");
             } else {
                 firstNumber = romanToNumber(numTrim1);
                 secondNumber = romanToNumber(numTrim2);
                 if (firstNumber < 0 && secondNumber < 0) {
-                    System.err.println("Допустимы всего два значения от I до X! Первые и третьи элементы только " +
-                            "могут быть операндами, второй элемент должен быть оператором!");
+                    throw new RuntimeException("Допустимы всего два значения от I до X! Первые и третьи элементы " +
+                            "только могут быть операндами, второй элемент должен быть оператором!");
                 } else if (firstNumber<secondNumber && operation=='-') {
-                    System.err.println("В римской системе нет отрицательных чисел");
+                    throw new RuntimeException("В римской системе нет отрицательных чисел");
                 } else {
                     result = calc(firstNumber, secondNumber, operation);
                     String resultRoman = convertNumToRoman(result);
                     System.out.println(resultRoman);
                 }
             }
-        }else {
-            System.err.println("формат математической операции не удовлетворяет заданию - два операнда и один " +
-                    "оператор (+, -, /, *)");
         }
-
-
-
-
-
     }
 
     public static boolean isParsable(String input) {
